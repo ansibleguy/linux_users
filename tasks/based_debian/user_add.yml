@@ -16,11 +16,23 @@
     comment: "{% if user.value.comment is defined %}{{ default_user_config.comment_prefix }}{% endif %}{{ user.value.comment | default(default_user_config.comment) }}"
     shell: "{{ user.value.shell | default(default_user_config.shell) }}"
     password: "{{ user.value.password | default(password_disabled) | password_hash('sha512') }}"
-    update_password: "{{ user.value.update_password | default(default_user_config.update_password) }}"
-    groups: "{{ user.value.update_password | default(default_user_config.groups) }}"
+    update_password: "{% if user.value.always_update_password | default(default_user_config.always_update_password) %}always{% else %}on_create{% endif %}"
+    groups: "{{ user.value.groups | default(default_user_config.groups) }}"
     append: "{{ user.value.append_groups | default(default_user_config.append_groups) }}"
-  register: user_update
+  register: user_account
   no_log: true
+  when: >
+    user.value.dont_touch is undefined or
+    not user.value.dont_touch
+
+- name: "User | Debian-Based | Add | Pulling user info for '{{ user.key }}'"
+  ansible.builtin.getent:
+    database: 'passwd'
+    key: "{{ user.key }}"
+    split: ":"
+  when:
+    - user.value.dont_touch is defined
+    - user.value.dont_touch
 
 - name: "User | Debian-Based | Add | Force password change for user '{{ user.key }}'"
   ansible.builtin.user:
@@ -28,7 +40,7 @@
     expires: -1
   when: >
     (user.value.force_password_change is defined and user.value.force_password_change) or
-    (user_update.changed and "{{ user.value.password_change | default(default_user_config.password_change) }}")
+    (user_account.changed and "{{ user.value.password_change | default(default_user_config.password_change) }}")
 
 - name: "User | Debian-Based | Add | Adding user '{{ user.key }}' to groups"
   include_tasks: based_debian/user_membership.yml
@@ -50,7 +62,7 @@
     state: present
     key: '{{ item }}'
     manage_dir: true
-  with_items: "{{ user.value.ssh_pub }}"
+  with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
   when: >
     user_sshpub_path is undefined or
     user_sshpub_path == '' or
@@ -63,7 +75,7 @@
     key: '{{ item }}'
     manage_dir: false
     path: "{{ user_sshpub_path | replace(user_sshpub_path_name_var, user.key) }}"
-  with_items: "{{ user.value.ssh_pub }}"
+  with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
   when:
     - user_sshpub_path is defined
     - user_sshpub_path != ''
@@ -88,3 +100,16 @@
   when: >
     user.value.privileges is undefined or
     user.value.privileges|length == 0
+
+- name: "User | Debian-Based | Add | Setting bash aliases for user '{{ user.key }}'"
+  blockinfile:
+    path: "{{ user_account.home | default(getent_passwd[user.key][4]) }}/.bashrc"
+    block: |
+      {% for alias, command in user.value.bash_aliases.items() %}
+        alias {{ alias }}='{{ command }}'
+      {% endfor %}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - custom aliases"
+  ignore_errors: true
+  when:
+    - user.value.bash_aliases is defined
+    - user.value.bash_aliases | length > 0

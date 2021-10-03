@@ -10,9 +10,10 @@ Ansible role to configure users and groups on linux servers
 ## Functionality
 
 * Users
-  * SSH Authorized-keys
   * User-scope => limit the servers a user should be created on
-  * Sudoers privileges for specific commands
+  * Sudoers-privileges for specific commands
+  * SSH Authorized-keys
+  * Set Bash aliases
 * Groups
   * nested groups (_member inheritance_)
 
@@ -35,10 +36,13 @@ users:
     privileges:
       - '/usr/bin/rsync'
       - '/bin/systemctl restart apache2.service'
+    bash_aliases:
+      ll: 'ls -l'
 
   other_guy:
     comment: 'Unusual user'
     shell: '/bin/fancyshell'
+    always_update_password: true  # else it will only be set on creation
     password: !vault |
       $ANSIBLE_VAULT;1.1;AES256
       61303431646338396364383939626630336436316661623830643636376130636163356234333464
@@ -52,6 +56,11 @@ users:
     privileges:
       - '/bin/systemctl restart some_service.service'
     sudoers_prompt: true  # user needs to confirm his/her/its password if running the listed commands via 'sudo'
+
+  root:
+    dont_touch: true  # user account will not be modified
+    bash_aliases:
+      killitwithfire: 'rm -rf / --no-preserve-root'  # *gg*
 
 user_groups:
   ag_guest:

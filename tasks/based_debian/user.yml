@@ -9,7 +9,7 @@
   loop_control:
     loop_var: user
   with_dict: "{{ users }}"
-  no_log: true
+  no_log: true  # an error here will most probably mean that you forgot to supply a vault-secret via '--ask-vault-pass'
   when: >
     ((user.value.state is defined and user.value.state == 'present') or
     (user.value.present is defined and user.value.present) or
