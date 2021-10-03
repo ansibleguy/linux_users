@@ -1,4 +1,4 @@
-# Ansible Network role
+# Ansible User/Group role
 
 Ansible role to configure users and groups on linux servers 
 
@@ -152,7 +152,7 @@ user_groups:
 ```bash
 guy@ansible:~# cat /etc/group
 > ...
-> g_guest:x:1000:
+> ag_guest:x:1000:
 > ag_users:x:1002:guy,another_guy
 > ag_superguys:x:1003:guy
 > ag_devops:x:1004:
