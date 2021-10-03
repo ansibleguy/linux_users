@@ -1,0 +1,34 @@
+---
+
+- name: User | Debian-Based | Setting distro-vars
+  set_fact:
+    password_disabled: '!'
+
+- name: User | Debian-Based | Adding users
+  include_tasks: based_debian/user_add.yml
+  loop_control:
+    loop_var: user
+  with_dict: "{{ users }}"
+  no_log: true
+  when: >
+    ((user.value.state is defined and user.value.state == 'present') or
+    (user.value.present is defined and user.value.present) or
+    (user.value.state is undefined and user.value.present is undefined and default_group_config.state == 'present')) and
+    (user.value.scope is undefined or
+    inventory_hostname in user.value.scope|ensure_list or
+    user.value.scope|ensure_list|intersection(groups))
+
+- name: User | Debian-Based | Removing users
+  include_tasks: based_debian/user_rm.yml
+  loop_control:
+    loop_var: user
+  with_dict: "{{ users }}"
+  no_log: true
+  when: >
+    (user.value.state is defined and user.value.state == 'absent') or
+    (user.value.absent is defined and user.value.absent) or
+    (user.value.state is undefined and user.value.absent is undefined and default_group_config.state == 'absent') or
+    (user.value.scope is defined and
+    inventory_hostname not in user.value.scope|ensure_list and
+    not user.value.scope|ensure_list|intersection(groups))
+

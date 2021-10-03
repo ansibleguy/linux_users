@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+{% set cmd_alias = 'USER_PRIV_' + user.key|upper|regex_replace('[^A-Z]','') %}
+
+Cmnd_Alias {{ cmd_alias }} = \
+{% for cmd in user.value.privileges %}
+  {{ cmd }}{% if not loop.last %}, \{% endif %}
+
+{% endfor %}
+
+{{ user.key }} ALL=(ALL) {% if not user.value.sudoers_prompt | default(default_user_config.sudoers_prompt) %}NOPASSWD: {% endif %}{{ cmd_alias }}
+
+{% if user.value.privileges_custom is defined and user.value.privileges_custom|length > 0 %}
+{%   for custom_privilege in user.value.privileges_custom %}
+{{ user.key }} {{ custom_privilege }}
+{%   endfor %}
+{% endif %}
+

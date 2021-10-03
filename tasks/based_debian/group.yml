@@ -1,0 +1,28 @@
+---
+
+- name: Group | Debian-Based | Adding groups
+  include_tasks: based_debian/group_add.yml
+  with_dict: "{{ user_groups }}"
+  loop_control:
+    loop_var: group
+  no_log: true
+  when: >
+    (group.value.state is defined and group.value.state == 'present') or
+    (group.value.present is defined and group.value.present) or
+    (group.value.state is undefined and group.value.present is undefined and
+    (group.value.absent is undefined or not group.value.absent) and
+    default_group_config.state == 'present')
+
+- name: Group | Debian-Based | Removing groups
+  include_tasks: based_debian/group_rm.yml
+  with_dict: "{{ user_groups }}"
+  loop_control:
+    loop_var: group
+  no_log: true
+  when: >
+    (group.value.state is defined and group.value.state == 'absent') or
+    (group.value.absent is defined and group.value.absent) or
+    (group.value.state is undefined and group.value.absent is undefined and
+    (group.value.present is undefined or not group.value.present) and
+    default_group_config.state == 'absent')
+
