@@ -17,6 +17,8 @@ Ansible role to configure users and groups on linux servers
 * Groups
   * nested groups (_member inheritance_)
 
+**Note:** Most of this functionality can be opted in or out using the main defaults file and variables!
+
 ## Usage
 
 Define the users and user_groups config as needed:
