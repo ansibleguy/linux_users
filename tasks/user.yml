@@ -1,5 +1,5 @@
 ---
 
 - name: User | Processing debian-based config
-  ansible.builtin.import_tasks: based_debian/user.yml
+  ansible.builtin.import_tasks: debian/user.yml
   when: "ansible_distribution|lower in ['debian', 'ubuntu']"

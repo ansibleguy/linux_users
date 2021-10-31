@@ -1,6 +1,6 @@
 ---
 
-- name: "Group | Debian-Based | Adding '{{ group.key }}'"
+- name: "Group | Debian | Adding '{{ group.key }}'"
   ansible.builtin.group:
     name: "{{ group.key }}"
     state: 'present'

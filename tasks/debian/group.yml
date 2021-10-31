@@ -1,7 +1,7 @@
 ---
 
-- name: Group | Debian-Based | Adding groups
-  include_tasks: based_debian/group_add.yml
+- name: Group | Debian | Adding groups
+  include_tasks: debian/group_add.yml
   with_dict: "{{ user_groups }}"
   loop_control:
     loop_var: group
@@ -13,8 +13,8 @@
     (group.value.absent is undefined or not group.value.absent) and
     default_group_config.state == 'present')
 
-- name: Group | Debian-Based | Removing groups
-  include_tasks: based_debian/group_rm.yml
+- name: Group | Debian | Removing groups
+  include_tasks: debian/group_rm.yml
   with_dict: "{{ user_groups }}"
   loop_control:
     loop_var: group
@@ -25,4 +25,3 @@
     (group.value.state is undefined and group.value.absent is undefined and
     (group.value.present is undefined or not group.value.present) and
     default_group_config.state == 'absent')
-

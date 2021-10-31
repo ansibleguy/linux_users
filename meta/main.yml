@@ -1,7 +1,11 @@
 ---
 
 galaxy_info:
-  author: 'AnsibleGuy'
+  authors: ['AnsibleGuy <guy@ansibleguy.net>']
+  readme: 'ReadMe.md'
+  license: ['MIT']
+  version: '1.0'
+  repository: 'https://github.com/ansibleguy/base-user'
   description: 'Role to configure users and groups on a linux machine'
   platforms:
     - name: Debian
@@ -12,8 +16,7 @@ galaxy_info:
         - bionic
   galaxy_tags:
     - 'users'
-    - 'user management'
+    - 'usermanagement'
     - 'groups'
-    - 'nested grouping'
     - 'sudoers'
     - 'privileges'

@@ -6,5 +6,5 @@
   when: group_nesting
 
 - name: Group | Processing debian-based config
-  ansible.builtin.import_tasks: based_debian/group.yml
+  ansible.builtin.import_tasks: debian/group.yml
   when: "ansible_distribution|lower in ['debian', 'ubuntu']"

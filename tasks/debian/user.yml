@@ -1,11 +1,11 @@
 ---
 
-- name: User | Debian-Based | Setting distro-vars
+- name: User | Debian | Setting distro-vars
   set_fact:
     password_disabled: '!'
 
-- name: User | Debian-Based | Adding users
-  include_tasks: based_debian/user_add.yml
+- name: User | Debian | Adding users
+  include_tasks: debian/user_add.yml
   loop_control:
     loop_var: user
   with_dict: "{{ users }}"
@@ -18,8 +18,8 @@
     inventory_hostname in user.value.scope|ensure_list or
     user.value.scope|ensure_list|intersection(groups))
 
-- name: User | Debian-Based | Removing users
-  include_tasks: based_debian/user_rm.yml
+- name: User | Debian | Removing users
+  include_tasks: debian/user_rm.yml
   loop_control:
     loop_var: user
   with_dict: "{{ users }}"
@@ -31,4 +31,3 @@
     (user.value.scope is defined and
     inventory_hostname not in user.value.scope|ensure_list and
     not user.value.scope|ensure_list|intersection(groups))
-
