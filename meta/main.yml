@@ -1,0 +1,19 @@
+---
+
+galaxy_info:
+  author: 'AnsibleGuy'
+  description: 'Role to configure users and groups on a linux machine'
+  platforms:
+    - name: Debian
+      versions:
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - bionic
+  galaxy_tags:
+    - 'users'
+    - 'user management'
+    - 'groups'
+    - 'nested grouping'
+    - 'sudoers'
+    - 'privileges'
