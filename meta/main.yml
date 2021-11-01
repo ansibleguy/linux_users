@@ -4,8 +4,8 @@ galaxy_info:
   author: 'AnsibleGuy <guy@ansibleguy.net>'
   readme: 'README.md'
   license: 'MIT'
-  repository: 'https://github.com/ansibleguy/base-user'
-  issue_tracker_url: 'https://github.com/ansibleguy/base-user/issues'
+  repository: 'https://github.com/ansibleguy/linux_users'
+  issue_tracker_url: 'https://github.com/ansibleguy/linux_users/issues'
   github_branch: 'stable'
   min_ansible_version: 2.9.0
   description: 'Role to configure users and groups on a linux machine'
