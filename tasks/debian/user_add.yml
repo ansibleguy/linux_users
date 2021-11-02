@@ -1,7 +1,7 @@
 ---
 
 - name: "User | Debian | Add | Adding primary group for user '{{ user.key }}'"
-  include_tasks: debian/group_add.yml
+  ansible.builtin.include_tasks: group_add.yml
   args:
     apply:
       vars:
@@ -40,10 +40,10 @@
     expires: -1
   when: >
     (user.value.force_password_change is defined and user.value.force_password_change) or
-    (user_account.changed and "{{ user.value.password_change | default(default_user_config.password_change) }}")
+    (user_account.changed and user.value.password_change | default(default_user_config.password_change))
 
 - name: "User | Debian | Add | Adding user '{{ user.key }}' to groups"
-  include_tasks: debian/user_membership.yml
+  ansible.builtin.include_tasks: user_membership.yml
   loop_control:
     loop_var: group
   with_dict: "{{ user_groups }}"
@@ -94,7 +94,7 @@
     - user.value.privileges|length > 0
 
 - name: "User | Debian | Add | Checking that privileges for user '{{ user.key }}' are not set"
-  file:
+  ansible.builtin.file:
     path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key }}"
     state: absent
   when: >
@@ -102,7 +102,7 @@
     user.value.privileges|length == 0
 
 - name: "User | Debian | Add | Setting bash aliases for user '{{ user.key }}'"
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: "{{ user_account.home | default(getent_passwd[user.key][4]) }}/.bashrc"
     block: |
       {% for alias, command in user.value.bash_aliases.items() %}

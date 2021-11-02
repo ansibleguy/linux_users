@@ -1,11 +1,11 @@
 ---
 
 - name: User | Debian | Setting distro-vars
-  set_fact:
+  ansible.builtin.set_fact:
     password_disabled: '!'
 
 - name: User | Debian | Adding users
-  include_tasks: debian/user_add.yml
+  ansible.builtin.include_tasks: user_add.yml
   loop_control:
     loop_var: user
   with_dict: "{{ users }}"
@@ -19,7 +19,7 @@
     user.value.scope|ensure_list|intersection(groups))
 
 - name: User | Debian | Removing users
-  include_tasks: debian/user_rm.yml
+  ansible.builtin.include_tasks: user_rm.yml
   loop_control:
     loop_var: user
   with_dict: "{{ users }}"

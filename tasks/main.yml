@@ -1,13 +1,13 @@
 ---
 
 - name: User/Group | Processing groups
-  import_tasks: group.yml
+  ansible.builtin.import_tasks: group.yml
   when:
     - user_groups is defined
     - user_groups|length > 0
 
 - name: User/Group | Processing users
-  import_tasks: user.yml
+  ansible.builtin.import_tasks: user.yml
   when:
     - users is defined
     - users|length > 0

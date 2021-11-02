@@ -1,7 +1,7 @@
 ---
 
 - name: Group | Update groups to include nested members
-  set_fact:
+  ansible.builtin.set_fact:
     user_groups: "{{ user_groups|parse_nested_members(group_nesting_max_depth) }}"
   when: group_nesting
 

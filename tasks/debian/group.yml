@@ -1,7 +1,7 @@
 ---
 
 - name: Group | Debian | Adding groups
-  include_tasks: debian/group_add.yml
+  ansible.builtin.include_tasks: group_add.yml
   with_dict: "{{ user_groups }}"
   loop_control:
     loop_var: group
@@ -14,7 +14,7 @@
     default_group_config.state == 'present')
 
 - name: Group | Debian | Removing groups
-  include_tasks: debian/group_rm.yml
+  ansible.builtin.include_tasks: group_rm.yml
   with_dict: "{{ user_groups }}"
   loop_control:
     loop_var: group

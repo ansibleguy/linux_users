@@ -16,12 +16,12 @@
     - user_sshpub_path != ''
 
 - name: "User | Debian | Remove | Removing privileges for user '{{ user.key }}'"
-  file:
+  ansible.builtin.file:
     path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key }}"
     state: absent
 
 - name: "User | Debian | Remove | Removing primary group for user '{{ user.key }}'"
-  include_tasks: debian/group_rm.yml
+  ansible.builtin.include_tasks: group_rm.yml
   args:
     apply:
       vars:
