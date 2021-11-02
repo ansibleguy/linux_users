@@ -19,6 +19,11 @@ Ansible role to configure users and groups on linux servers
 
 **Note:** Most of this functionality can be opted in or out using the main defaults file and variables!
 
+## Requirements
+
+* Posix collection: ```ansible-galaxy install -r requirements.yml```
+
+
 ## Usage
 
 Define the users and user_groups config as needed:
@@ -82,9 +87,14 @@ user_groups:
     member_of: ['ag_superguys']
 ```
 
+Run the playbook:
+```bash
+ansible-playbook -K -D -i inventory/hosts.yml playbook.yml --ask-vault-pass
+```
+
 You might want to use 'ansible-vault' to encrypt your passwords:
 ```bash
-ansible-vault encrypt_string 'SECRET_CONTENT_OF_VAR' --name NAME_OF_VAR
+ansible-vault encrypt_string
 ```
 
 #### Nested Groups

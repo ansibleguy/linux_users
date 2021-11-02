@@ -1,5 +1,7 @@
 ---
 
+# ansible-playbook -K -D -i inventory/hosts.yml playbook.yml --ask-vault-pass
+
 - name: Deploying users and groups
   hosts: all
   become: true
@@ -41,6 +43,9 @@
         members: ['reymond']
         member_of: ['ag_superguys']
 
+#  vars_files:  # you might want to write your user/group config to external files, so you can use it in multiple playbooks
+#  - vars/user.yml
+#  - vars/group.yml
 
   roles:
   - ansibleguy.linux_users
