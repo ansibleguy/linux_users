@@ -2,22 +2,32 @@
 
 Ansible role to configure users and groups on linux servers 
 
-**Note:** this role currently only supports debian-based systems
 
 **Tested:**
 * Debian 11
 
 ## Functionality
 
-* Users
+* **Users**
   * User-scope => limit the servers a user should be created on
   * Sudoers-privileges for specific commands
   * SSH Authorized-keys
   * Set Bash aliases
-* Groups
+
+
+* **Groups**
   * nested groups (_member inheritance_)
 
-**Note:** Most of this functionality can be opted in or out using the main defaults file and variables!
+## Info
+
+* **Note:** this role currently only supports debian-based systems
+
+
+* **Note:** Most of this functionality can be opted in or out using the main defaults file and variables!
+
+
+* **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
+
 
 ## Requirements
 

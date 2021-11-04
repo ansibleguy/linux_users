@@ -27,4 +27,5 @@
       vars:
         group:
           key: "{{ user.value.group | default(user.key) }}"
+  no_log: true
   when: user.value.group|default(user.key) not in user_groups

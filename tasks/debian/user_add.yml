@@ -7,6 +7,7 @@
       vars:
         group:
           key: "{{ user.value.group | default(user.key) }}"
+  no_log: true
   when: user.value.group|default(user.key) not in user_groups
 
 - name: "User | Debian | Add | Adding user '{{ user.key }}'"
@@ -62,6 +63,7 @@
     state: present
     key: '{{ item }}'
     manage_dir: true
+  no_log: true
   with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
   when: >
     user_sshpub_path is undefined or
@@ -75,6 +77,7 @@
     key: '{{ item }}'
     manage_dir: false
     path: "{{ user_sshpub_path | replace(user_sshpub_path_name_var, user.key) }}"
+  no_log: true
   with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
   when:
     - user_sshpub_path is defined

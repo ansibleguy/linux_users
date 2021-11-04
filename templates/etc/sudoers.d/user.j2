@@ -1,4 +1,6 @@
 # {{ ansible_managed }}
+# ansibleguy.linux_users
+
 {% set cmd_alias = 'USER_PRIV_' + user.key|upper|regex_replace('[^A-Z]','') %}
 
 Cmnd_Alias {{ cmd_alias }} = \
