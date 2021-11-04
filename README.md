@@ -26,6 +26,8 @@ Ansible role to configure users and groups on linux servers
 
 ## Usage
 
+### Config
+
 Define the users and user_groups config as needed:
 ```yaml
 users:
@@ -87,14 +89,16 @@ user_groups:
     member_of: ['ag_superguys']
 ```
 
-Run the playbook:
-```bash
-ansible-playbook -K -D -i inventory/hosts.yml playbook.yml --ask-vault-pass
-```
-
 You might want to use 'ansible-vault' to encrypt your passwords:
 ```bash
 ansible-vault encrypt_string
+```
+
+### Execution
+
+Run the playbook:
+```bash
+ansible-playbook -K -D -i inventory/hosts.yml playbook.yml --ask-vault-pass
 ```
 
 #### Nested Groups
