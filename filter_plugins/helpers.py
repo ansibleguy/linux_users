@@ -1,10 +1,18 @@
+from re import sub as regex_replace
+
+
 class FilterModule(object):
 
     def filters(self):
         return {
             "intersection": self.intersection,
             "ensure_list": self.ensure_list,
+            "sudoers_key": self.sudoers_key,
         }
+
+    @staticmethod
+    def sudoers_key(key: str) -> str:
+        return regex_replace(r'[^0-9a-zA-Z\s]+', '', key)
 
     @classmethod
     def intersection(cls, search_for: (list, str), search_in: (list, str)) -> bool:

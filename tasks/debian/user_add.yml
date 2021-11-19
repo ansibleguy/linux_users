@@ -87,7 +87,7 @@
 - name: "User | Debian | Add | Adding user privileges for user '{{ user.key }}'"
   ansible.builtin.template:
     src: 'templates/etc/sudoers.d/user.j2'
-    dest: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key }}"
+    dest: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
     validate: '/usr/sbin/visudo -cf %s'
     mode: 0640
     owner: 'root'
@@ -98,7 +98,7 @@
 
 - name: "User | Debian | Add | Checking that privileges for user '{{ user.key }}' are not set"
   ansible.builtin.file:
-    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key }}"
+    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
     state: absent
   when: >
     user.value.privileges is undefined or

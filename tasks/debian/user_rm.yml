@@ -17,7 +17,7 @@
 
 - name: "User | Debian | Remove | Removing privileges for user '{{ user.key }}'"
   ansible.builtin.file:
-    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key }}"
+    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
     state: absent
 
 - name: "User | Debian | Remove | Removing primary group for user '{{ user.key }}'"
