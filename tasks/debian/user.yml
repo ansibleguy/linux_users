@@ -12,11 +12,12 @@
   no_log: true  # an error here will most probably mean that you forgot to supply a vault-secret via '--ask-vault-pass'
   when: >
     ((user.value.state is defined and user.value.state == 'present') or
-    (user.value.present is defined and user.value.present) or
-    (user.value.state is undefined and user.value.present is undefined and default_group_config.state == 'present')) and
+    (user.value.present is defined and user.value.present)) and
     (user.value.scope is undefined or
     inventory_hostname in user.value.scope|ensure_list or
     user.value.scope|ensure_list|intersection(groups))
+  # user should be created
+  # user is in host-scope
 
 - name: User | Debian | Removing users
   ansible.builtin.include_tasks: user_rm.yml
@@ -25,9 +26,8 @@
   with_dict: "{{ users }}"
   no_log: true
   when: >
-    (user.value.state is defined and user.value.state == 'absent') or
-    (user.value.absent is defined and user.value.absent) or
-    (user.value.state is undefined and user.value.absent is undefined and default_group_config.state == 'absent') or
-    (user.value.scope is defined and
+    ((user.value.state is defined and user.value.state != 'present') or  
+    (user.value.absent is defined and user.value.absent)) or
+    (user.value.scope is defined and 
     inventory_hostname not in user.value.scope|ensure_list and
     not user.value.scope|ensure_list|intersection(groups))
