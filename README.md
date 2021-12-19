@@ -1,6 +1,6 @@
 # Ansible User/Group role
 
-Ansible role to configure users and groups on linux servers 
+Ansible Role to deploy users and groups on linux servers.
 
 
 **Tested:**
