@@ -26,6 +26,18 @@
     user.value.dont_touch is undefined or
     not user.value.dont_touch
 
+- name: "User | Debian | Add | Setting password for user '{{ user.key }}'"
+  ansible.builtin.user:
+    name: "{{ user.key }}"
+    password: "{{ user.value.password | default(password_disabled) | password_hash('sha512') }}"
+    update_password: "{% if user.value.always_update_password | default(default_user_config.always_update_password) %}always{% else %}on_create{% endif %}"
+  register: user_account_pwd
+  no_log: true
+  when:
+    - user.value.dont_touch is defined
+    - user.value.dont_touch
+    - user.value.password is defined
+
 - name: "User | Debian | Add | Pulling user info for '{{ user.key }}'"
   ansible.builtin.getent:
     database: 'passwd'
@@ -41,7 +53,8 @@
     expires: -1
   when: >
     (user.value.force_password_change is defined and user.value.force_password_change) or
-    (user_account.changed and user.value.password_change | default(default_user_config.password_change))
+    (user_account.changed and user.value.password_change | default(default_user_config.password_change) or
+    user_account_pwd.changed and user.value.password_change | default(default_user_config.password_change))
 
 - name: "User | Debian | Add | Adding user '{{ user.key }}' to groups"
   ansible.builtin.include_tasks: user_membership.yml
