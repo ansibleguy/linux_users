@@ -1,31 +1,28 @@
 ---
 
-- name: "User | Debian | Remove | Removing user '{{ user.key }}'"
+- name: "User | Debian | Remove | Removing user '{{ name }}'"
   ansible.builtin.user:
-    name: "{{ user.key }}"
-    state: 'absent'
-    remove: "{{ user.value.remove | default(default_user_config.remove) }}"
-    force: "{{ user.value.force_remove | default(default_user_config.force_remove) }}"
+    name: "{{ name }}"
+    state: absent
+    remove: "{{ user.remove }}"
+    force: "{{ user.force_remove }}"
 
-- name: "User | Debian | Remove | Removing ssh authorized-keys for user '{{ user.key }}' in custom path"
+- name: "User | Debian | Remove | Removing ssh authorized-keys for user '{{ name }}'"
   ansible.builtin.file:
     state: absent
-    path: "{{ user_sshpub_path | replace(user_sshpub_path_name_var, user.key) }}"
+    path: "{{ user.sshpub_path | replace(SYS_AUTH_HC.sshpub_user_var, name) }}"
   when:
-    - user_sshpub_path is defined
-    - user_sshpub_path != ''
+    - user.sshpub_path is defined
+    - "user.sshpub_path not in ['', none, ' ']"
 
-- name: "User | Debian | Remove | Removing privileges for user '{{ user.key }}'"
+- name: "User | Debian | Remove | Removing privileges for user '{{ name }}'"
   ansible.builtin.file:
-    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
+    path: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     state: absent
 
-- name: "User | Debian | Remove | Removing primary group for user '{{ user.key }}'"
+- name: "User | Debian | Remove | Removing primary group for user '{{ name }}'"
   ansible.builtin.include_tasks: group_rm.yml
-  args:
-    apply:
-      vars:
-        group:
-          key: "{{ user.value.group | default(user.key) }}"
+  vars:
+    group_name: "{{ user.group | default(name) }}"
   no_log: true
-  when: user.value.group|default(user.key) not in user_groups
+  when: user.group|default(name) not in SYS_AUTH.groups

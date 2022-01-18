@@ -1,27 +1,34 @@
 ---
 
-users: {}
-user_groups: {}
-group_nesting: true  # if nested groups will be supported/processed; when set to false only direct members are processed
-group_nesting_max_depth: 10
+default_system_auth:
+  users: {}
+  groups: {}
+  group_nesting:
+    enable: true  # if nested groups will be supported/processed; when set to false only direct members are processed
+    max_depth: 10
+
+SYS_AUTH: "{{ default_system_auth | combine(system_auth, recursive=true) }}"
+
+default_group_config:
+  state: 'present'
 
 default_user_config:
   password_change: true  # if the password must be changed if the user was updated (normally only after first run)
-  # force_password_change: false  # can only be defined on a per-user basis
+  force_password_change: false
   always_update_password: false
   shell: '/bin/bash'
   comment: 'Ansible managed'
   comment_prefix: 'Ansible managed - '  # will be prepended if not default comment
   groups: []
-  append_groups: true  # will not be evaluated while processing user_groups
+  append_groups: true  # will not be evaluated while processing SYS_AUTH.groups
   state: 'present'
   remove: false  # if the files related to the user should be removed once he/she/it gets deleted
   force_remove: false  # force delete the above
   sudoers_file_prefix: 'user_priv'
   sudoers_prompt: false  # if user should be prompted for password
+  sshpub_path:
+  # IF NOT SET: uses default of posix.authorized_key module '~/.ssh/authorized_keys'
+  # per example: '/etc/ssh/authorized_keys/${USER}' or '/home/${USER}/.ssh/authorized_keys'
 
-default_group_config:
-  state: 'present'
-
-user_sshpub_path:  # per example: '/etc/ssh/authorized_keys/${USER}'
-user_sshpub_path_name_var: '${USER}'  # '${USER}' will be replaced by the user's name
+SYS_AUTH_HC:
+  sshpub_user_var: '${USER}'  # '${USER}' will be replaced by the user's name

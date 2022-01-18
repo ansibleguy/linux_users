@@ -7,11 +7,11 @@ class FilterModule(object):
         return {
             "intersection": self.intersection,
             "ensure_list": self.ensure_list,
-            "sudoers_key": self.sudoers_key,
+            "safe_key": self.safe_key,
         }
 
     @staticmethod
-    def sudoers_key(key: str) -> str:
+    def safe_key(key: str) -> str:
         return regex_replace(r'[^0-9a-zA-Z\s]+', '', key)
 
     @classmethod

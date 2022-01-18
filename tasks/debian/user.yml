@@ -6,30 +6,32 @@
 
 - name: User | Debian | Adding users
   ansible.builtin.include_tasks: user_add.yml
+  vars:
+    user: "{{ default_user_config | combine(user_item.value, recursive=true) }}"
+    name: "{{ user_item.key }}"
   loop_control:
-    loop_var: user
-  with_dict: "{{ users }}"
+    loop_var: user_item
+  with_dict: "{{ SYS_AUTH.users }}"
   no_log: true  # an error here will most probably mean that you forgot to supply a vault-secret via '--ask-vault-pass'
   when: >
-    (user.value.absent is undefined or not user.value.absent) and
-    ((user.value.present is defined and user.value.present) or 
-    (user.value.state|default(default_user_config.state) == 'present')) and
-    (user.value.scope is undefined or
-    inventory_hostname in user.value.scope|ensure_list or
-    user.value.scope|ensure_list|intersection(groups))
+    user.state == 'present' and
+    (user.scope is undefined or
+    inventory_hostname in user.scope|ensure_list or
+    user.scope|ensure_list|intersection(groups))
   # user should be created
   # user is in host-scope
 
 - name: User | Debian | Removing users
   ansible.builtin.include_tasks: user_rm.yml
+  vars:
+    user: "{{ default_user_config | combine(user_item.value, recursive=true) }}"
+    name: "{{ user_item.key }}"
   loop_control:
-    loop_var: user
-  with_dict: "{{ users }}"
+    loop_var: user_item
+  with_dict: "{{ SYS_AUTH.users }}"
   no_log: true
   when: >
-    (user.value.present is undefined or not user.value.present) and
-    ((user.value.absent is defined and user.value.absent) or
-    (user.value.state|default(default_user_config.state) != 'present')) or
-    (user.value.scope is defined and 
-    inventory_hostname not in user.value.scope|ensure_list and
-    not user.value.scope|ensure_list|intersection(groups))
+    user.state != 'present' or
+    (user.scope is defined and 
+    inventory_hostname not in user.scope|ensure_list and
+    not user.scope|ensure_list|intersection(groups))

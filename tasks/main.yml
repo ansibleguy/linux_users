@@ -3,11 +3,11 @@
 - name: User/Group | Processing groups
   ansible.builtin.import_tasks: group.yml
   when:
-    - user_groups is defined
-    - user_groups|length > 0
+    - SYS_AUTH.groups is defined
+    - SYS_AUTH.groups|length > 0
 
 - name: User/Group | Processing users
   ansible.builtin.import_tasks: user.yml
   when:
-    - users is defined
-    - users|length > 0
+    - SYS_AUTH.users is defined
+    - SYS_AUTH.users|length > 0

@@ -1,131 +1,125 @@
 ---
 
-- name: "User | Debian | Add | Adding primary group for user '{{ user.key }}'"
+- name: "User | Debian | Add | Adding primary group for user '{{ name }}'"
   ansible.builtin.include_tasks: group_add.yml
-  args:
-    apply:
-      vars:
-        group:
-          key: "{{ user.value.group | default(user.key) }}"
+  vars:
+    group_name: "{{ user.group | default(name) }}"
   no_log: true
-  when: user.value.group|default(user.key) not in user_groups
+  when: user.group|default(name) not in SYS_AUTH.groups
 
-- name: "User | Debian | Add | Adding user '{{ user.key }}'"
+- name: "User | Debian | Add | Adding user '{{ name }}'"
   ansible.builtin.user:
-    name: "{{ user.key }}"
-    group: "{{ user.value.group | default(user.key) }}"
-    comment: "{% if user.value.comment is defined %}{{ default_user_config.comment_prefix }}{% endif %}{{ user.value.comment | default(default_user_config.comment) }}"
-    shell: "{{ user.value.shell | default(default_user_config.shell) }}"
-    password: "{{ user.value.password | default(password_disabled) | password_hash('sha512') }}"
-    update_password: "{% if user.value.always_update_password | default(default_user_config.always_update_password) %}always{% else %}on_create{% endif %}"
-    groups: "{{ user.value.groups | default(default_user_config.groups) }}"
-    append: "{{ user.value.append_groups | default(default_user_config.append_groups) }}"
+    name: "{{ name }}"
+    group: "{{ user.group | default(name) }}"
+    comment: "{% if user.comment is defined %}{{ user.comment_prefix }}{% endif %}{{ user.comment }}"
+    shell: "{{ user.shell }}"
+    password: "{{ user.password | default(password_disabled) | password_hash('sha512') }}"
+    update_password: "{% if user.always_update_password %}always{% else %}on_create{% endif %}"
+    groups: "{{ user.groups }}"
+    append: "{{ user.append_groups }}"
   register: user_account
   no_log: true
   when: >
-    user.value.dont_touch is undefined or
-    not user.value.dont_touch
+    user.dont_touch is undefined or
+    not user.dont_touch
 
-- name: "User | Debian | Add | Setting password for user '{{ user.key }}'"
+- name: "User | Debian | Add | Setting password for user '{{ name }}'"
   ansible.builtin.user:
-    name: "{{ user.key }}"
-    password: "{{ user.value.password | default(password_disabled) | password_hash('sha512') }}"
-    update_password: "{% if user.value.always_update_password | default(default_user_config.always_update_password) %}always{% else %}on_create{% endif %}"
+    name: "{{ name }}"
+    password: "{{ user.password | default(password_disabled) | password_hash('sha512') }}"
+    update_password: "{% if user.always_update_password %}always{% else %}on_create{% endif %}"
   register: user_account_pwd
   no_log: true
   when:
-    - user.value.dont_touch is defined
-    - user.value.dont_touch
-    - user.value.password is defined
+    - user.dont_touch is defined
+    - user.dont_touch
+    - user.password is defined
 
-- name: "User | Debian | Add | Pulling user info for '{{ user.key }}'"
+- name: "User | Debian | Add | Pulling user info for '{{ name }}'"
   ansible.builtin.getent:
     database: 'passwd'
-    key: "{{ user.key }}"
+    key: "{{ name }}"
     split: ":"
   when:
-    - user.value.dont_touch is defined
-    - user.value.dont_touch
+    - user.dont_touch is defined
+    - user.dont_touch
 
-- name: "User | Debian | Add | Force password change for user '{{ user.key }}'"
+- name: "User | Debian | Add | Force password change for user '{{ name }}'"
   ansible.builtin.user:
-    name: "{{ user.key }}"
+    name: "{{ name }}"
     expires: -1
   when: >
-    (user.value.force_password_change is defined and user.value.force_password_change) or
-    (user_account.changed and user.value.password_change | default(default_user_config.password_change) or
-    user_account_pwd.changed and user.value.password_change | default(default_user_config.password_change))
+    (user.force_password_change is defined and user.force_password_change) or
+    (user_account.changed and user.password_change or
+    user_account_pwd.changed and user.password_change)
 
-- name: "User | Debian | Add | Adding user '{{ user.key }}' to groups"
+- name: "User | Debian | Add | Adding user '{{ name }}' to groups"
   ansible.builtin.include_tasks: user_membership.yml
+  vars:
+    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group_name: "{{ group_item.key }}"
   loop_control:
-    loop_var: group
-  with_dict: "{{ user_groups }}"
+    loop_var: group_item
+  with_dict: "{{ SYS_AUTH.groups }}"
   no_log: true
   when:
-    - user.key in group.value.members
-    - ((group.value.state is defined and group.value.state == 'present') or
-      (group.value.present is defined and group.value.present) or
-      (group.value.state is undefined and group.value.present is undefined and
-      (group.value.absent is undefined or not group.value.absent) and
-      default_group_config.state == 'present'))
+    - name in group.members
+    - group.state == 'present'
 
-- name: "User | Debian | Add | Setting ssh authorized-keys for user '{{ user.key }}'"
+- name: "User | Debian | Add | Setting ssh authorized-keys for user '{{ name }}'"
   ansible.posix.authorized_key:
-    user: "{{ user.key }}"
+    user: "{{ name }}"
     state: present
     key: '{{ item }}'
     manage_dir: true
   no_log: true
-  with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
+  loop: "{{ user.ssh_pub|default([])|ensure_list }}"
   when: >
-    user_sshpub_path is undefined or
-    user_sshpub_path == '' or
-    user_sshpub_path is none
+    user.sshpub_path is undefined or 
+    user.sshpub_path in ['', none, ' ']
 
-- name: "User | Debian | Add | Setting ssh authorized-keys for user '{{ user.key }}' in custom path"
+- name: "User | Debian | Add | Setting ssh authorized-keys for user '{{ name }}' in custom path"
   ansible.posix.authorized_key:
-    user: "{{ user.key }}"
+    user: "{{ name }}"
     state: present
     key: '{{ item }}'
     manage_dir: false
-    path: "{{ user_sshpub_path | replace(user_sshpub_path_name_var, user.key) }}"
+    path: "{{ user.sshpub_path | replace(SYS_AUTH_HC.sshpub_user_var, name) }}"
   no_log: true
-  with_items: "{{ user.value.ssh_pub|default([])|ensure_list }}"
+  loop: "{{ user.ssh_pub|default([])|ensure_list }}"
   when:
-    - user_sshpub_path is defined
-    - user_sshpub_path != ''
-    - user_sshpub_path is not none
+    - user.sshpub_path is defined
+    - "user.sshpub_path not in ['', none, ' ']"
 
-- name: "User | Debian | Add | Adding user privileges for user '{{ user.key }}'"
+- name: "User | Debian | Add | Adding user privileges for user '{{ name }}'"
   ansible.builtin.template:
     src: 'templates/etc/sudoers.d/user.j2'
-    dest: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
+    dest: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     validate: '/usr/sbin/visudo -cf %s'
     mode: 0640
     owner: 'root'
     group: 'root'
   when:
-    - user.value.privileges is defined
-    - user.value.privileges|length > 0
+    - user.privileges is defined
+    - user.privileges|length > 0
 
-- name: "User | Debian | Add | Checking that privileges for user '{{ user.key }}' are not set"
+- name: "User | Debian | Add | Checking that privileges for user '{{ name }}' are not set"
   ansible.builtin.file:
-    path: "/etc/sudoers.d/{{ user.value.sudoers_file_prefix | default(default_user_config.sudoers_file_prefix) }}_{{ user.key | sudoers_key }}"
+    path: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     state: absent
   when: >
-    user.value.privileges is undefined or
-    user.value.privileges|length == 0
+    user.privileges is undefined or
+    user.privileges|length == 0
 
-- name: "User | Debian | Add | Setting bash aliases for user '{{ user.key }}'"
+- name: "User | Debian | Add | Setting bash aliases for user '{{ name }}'"
   ansible.builtin.blockinfile:
-    path: "{{ user_account.home | default(getent_passwd[user.key][4]) }}/.bashrc"
+    path: "{{ user_account.home | default(getent_passwd[name][4]) }}/.bashrc"
     block: |
-      {% for alias, command in user.value.bash_aliases.items() %}
+      {% for alias, command in user.bash_aliases.items() %}
         alias {{ alias }}='{{ command }}'
       {% endfor %}
     marker: "# {mark} ANSIBLE MANAGED BLOCK - custom aliases"
   ignore_errors: true
   when:
-    - user.value.bash_aliases is defined
-    - user.value.bash_aliases | length > 0
+    - user.bash_aliases is defined
+    - user.bash_aliases | length > 0

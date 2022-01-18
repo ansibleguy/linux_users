@@ -2,26 +2,22 @@
 
 - name: Group | Debian | Adding groups
   ansible.builtin.include_tasks: group_add.yml
-  with_dict: "{{ user_groups }}"
+  vars:
+    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group_name: "{{ group_item.key }}"
   loop_control:
-    loop_var: group
+    loop_var: group_item
+  with_dict: "{{ user_groups }}"
   no_log: true
-  when: >
-    (group.value.state is defined and group.value.state == 'present') or
-    (group.value.present is defined and group.value.present) or
-    (group.value.state is undefined and group.value.present is undefined and
-    (group.value.absent is undefined or not group.value.absent) and
-    default_group_config.state == 'present')
+  when: group.state == 'present'
 
 - name: Group | Debian | Removing groups
   ansible.builtin.include_tasks: group_rm.yml
-  with_dict: "{{ user_groups }}"
+  vars:
+    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group_name: "{{ group_item.key }}"
   loop_control:
-    loop_var: group
+    loop_var: group_item
+  with_dict: "{{ user_groups }}"
   no_log: true
-  when: >
-    (group.value.state is defined and group.value.state == 'absent') or
-    (group.value.absent is defined and group.value.absent) or
-    (group.value.state is undefined and group.value.absent is undefined and
-    (group.value.present is undefined or not group.value.present) and
-    default_group_config.state == 'absent')
+  when: group.state != 'present'

@@ -1,7 +1,7 @@
 ---
 
-- name: "User | Debian | Add | Membership of '{{ user.key }}' | Adding user to group '{{ group.key }}'"
+- name: "User | Debian | Add | Membership of '{{ name }}' | Adding user to group '{{ group_name }}'"
   ansible.builtin.user:
-    name: "{{ user.key }}"
-    groups: "{{ group.key }}"
+    name: "{{ name }}"
+    groups: "{{ group_name }}"
     append: true
