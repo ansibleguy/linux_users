@@ -5,9 +5,11 @@
   when:
     - SYS_AUTH.groups is defined
     - SYS_AUTH.groups|length > 0
+  tags: [users, groups, auth]
 
 - name: User/Group | Processing users
   ansible.builtin.import_tasks: user.yml
   when:
     - SYS_AUTH.users is defined
     - SYS_AUTH.users|length > 0
+  tags: [users, auth]
