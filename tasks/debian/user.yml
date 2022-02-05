@@ -32,6 +32,6 @@
   no_log: true
   when: >
     user.state != 'present' or
-    (user.scope is defined and 
+    (user.scope is defined and
     inventory_hostname not in user.scope|ensure_list and
     not user.scope|ensure_list|intersection(groups))

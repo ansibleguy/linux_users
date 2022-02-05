@@ -75,7 +75,7 @@
   no_log: true
   loop: "{{ user.ssh_pub|default([])|ensure_list }}"
   when: >
-    user.sshpub_path is undefined or 
+    user.sshpub_path is undefined or
     user.sshpub_path in ['', none, ' ']
 
 - name: "User | Debian | Add | Setting ssh authorized-keys for user '{{ name }}' in custom path"

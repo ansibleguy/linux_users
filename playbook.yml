@@ -12,7 +12,9 @@
           comment: 'AnsibleGuy'
           password: 'PWD'
           ssh_pub:
-            - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno= guy@ansibleguy.net'
+            - 'ecdsa-sha2-nistp256
+            AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno=
+            guy@ansibleguy.net'
           privileges:
             - '/usr/bin/rsync'
             - '/bin/systemctl restart apache2.service'
@@ -21,7 +23,9 @@
           comment: 'Unusual user'
           password: 'PWD'
           ssh_pub:
-            - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxS1MoeqDyN6+ZKsnLJHIA0/5nVQ6+a1Bgwknx3U7lGlqFIki/HgUX089YUzhbEKcxzTlR3Ji+gLnxhBZhe700= other@ansibleguy.net'
+            - 'ecdsa-sha2-nistp256
+            AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxS1MoeqDyN6+ZKsnLJHIA0/5nVQ6+a1Bgwknx3U7lGlqFIki/HgUX089YUzhbEKcxzTlR3Ji+gLnxhBZhe700=
+            other@ansibleguy.net'
           scope: 'dc_europe_west'
           privileges:
             - '/bin/systemctl restart some_service.service'
@@ -44,9 +48,10 @@
           members: ['reymond']
           member_of: ['ag_superguys']
 
-#  vars_files:  # you might want to write your user/group config to external files, so you can use it in multiple playbooks
-#  - vars/user.yml
-#  - vars/group.yml
+  vars_files: []
+  # you might want to write your user/group config to external files, so you can use it in multiple playbooks
+  #  - vars/user.yml
+  #  - vars/group.yml
 
   roles:
-  - ansibleguy.linux_users
+    - ansibleguy.linux_users
