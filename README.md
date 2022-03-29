@@ -2,6 +2,8 @@
 
 Ansible Role to deploy users and groups on linux servers.
 
+[![Ansible Galaxy](https://img.shields.io/ansible/role/56757)](https://galaxy.ansible.com/ansibleguy/linux_users)
+[![Ansible Galaxy Downloads](https://img.shields.io/badge/dynamic/json?color=blueviolet&label=Galaxy%20Downloads&query=%24.download_count&url=https%3A%2F%2Fgalaxy.ansible.com%2Fapi%2Fv1%2Froles%2F56757%2F%3Fformat%3Djson)](https://galaxy.ansible.com/ansibleguy/linux_users)
 
 **Tested:**
 * Debian 11
