@@ -1,18 +1,18 @@
 ---
 
-default_system_auth:
+defaults_sa:
   users: {}
   groups: {}
   group_nesting:
     enable: true  # if nested groups will be supported/processed; when set to false only direct members are processed
     max_depth: 10
 
-SYS_AUTH: "{{ default_system_auth | combine(system_auth, recursive=true) }}"
+SYS_AUTH: "{{ defaults_sa | combine(system_auth, recursive=true) }}"
 
-default_group_config:
+defaults_group:
   state: 'present'
 
-default_user_config:
+defaults_user:
   password_change: true  # if the password must be changed if the user was updated (normally only after first run)
   force_password_change: false
   always_update_password: false

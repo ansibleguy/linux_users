@@ -3,7 +3,7 @@
 - name: Group | Debian | Adding groups
   ansible.builtin.include_tasks: group_add.yml
   vars:
-    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
     group_name: "{{ group_item.key }}"
   loop_control:
     loop_var: group_item
@@ -14,7 +14,7 @@
 - name: Group | Debian | Removing groups
   ansible.builtin.include_tasks: group_rm.yml
   vars:
-    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
     group_name: "{{ group_item.key }}"
   loop_control:
     loop_var: group_item

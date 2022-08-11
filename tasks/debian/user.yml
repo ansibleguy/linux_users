@@ -7,7 +7,7 @@
 - name: User | Debian | Adding users
   ansible.builtin.include_tasks: user_add.yml
   vars:
-    user: "{{ default_user_config | combine(user_item.value, recursive=true) }}"
+    user: "{{ defaults_user | combine(user_item.value, recursive=true) }}"
     name: "{{ user_item.key }}"
   loop_control:
     loop_var: user_item
@@ -24,7 +24,7 @@
 - name: User | Debian | Removing users
   ansible.builtin.include_tasks: user_rm.yml
   vars:
-    user: "{{ default_user_config | combine(user_item.value, recursive=true) }}"
+    user: "{{ defaults_user | combine(user_item.value, recursive=true) }}"
     name: "{{ user_item.key }}"
   loop_control:
     loop_var: user_item

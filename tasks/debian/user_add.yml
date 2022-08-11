@@ -56,7 +56,7 @@
 - name: "User | Debian | Add | {{ name }} | Adding to groups"
   ansible.builtin.include_tasks: user_membership.yml
   vars:
-    group: "{{ default_group_config | combine(group_item.value, recursive=true) }}"
+    group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
     group_name: "{{ group_item.key }}"
   loop_control:
     loop_var: group_item
