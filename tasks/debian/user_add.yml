@@ -73,7 +73,7 @@
     key: '{{ item }}'
     manage_dir: true
   no_log: true
-  loop: "{{ user.ssh_pub|default([])|ensure_list }}"
+  loop: "{{ user.ssh_pub | default([]) | ensure_list }}"
   when: >
     user.sshpub_path is undefined or
     user.sshpub_path in ['', none, ' ']
@@ -86,7 +86,7 @@
     manage_dir: false
     path: "{{ user.sshpub_path | replace(SYS_AUTH_HC.sshpub_user_var, name) }}"
   no_log: true
-  loop: "{{ user.ssh_pub|default([])|ensure_list }}"
+  loop: "{{ user.ssh_pub | default([]) | ensure_list }}"
   when:
     - user.sshpub_path is defined
     - "user.sshpub_path not in ['', none, ' ']"

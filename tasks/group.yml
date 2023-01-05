@@ -2,9 +2,9 @@
 
 - name: Group | Update groups to include nested members
   ansible.builtin.set_fact:
-    user_groups: "{{ SYS_AUTH.groups|parse_nested_members(SYS_AUTH.group_nesting.max_depth) }}"
+    user_groups: "{{ SYS_AUTH.groups | parse_nested_members(SYS_AUTH.group_nesting.max_depth) }}"
   when: SYS_AUTH.group_nesting.enable
 
 - name: Group | Processing debian-based config
   ansible.builtin.import_tasks: debian/group.yml
-  when: "ansible_distribution|lower in ['debian', 'ubuntu']"
+  when: "ansible_distribution | lower in ['debian', 'ubuntu']"
