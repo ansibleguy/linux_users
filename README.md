@@ -11,6 +11,18 @@ Ansible Role to deploy users and groups on linux servers.
 **Tested:**
 * Debian 11
 
+## Install
+
+```bash
+ansible-galaxy install ansibleguy.linux_users
+
+# or to custom role-path
+ansible-galaxy install ansibleguy.linux_users --roles-path ./roles
+
+# install dependencies
+ansible-galaxy install -r requirements.yml
+```
+
 ## Functionality
 
 * **Users**
@@ -34,11 +46,6 @@ Ansible Role to deploy users and groups on linux servers.
 
 
 * **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
-
-
-## Requirements
-
-* Posix collection: ```ansible-galaxy install -r requirements.yml```
 
 
 ## Usage
