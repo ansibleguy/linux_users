@@ -7,10 +7,10 @@ class FilterModule(object):
 
     @staticmethod
     def parse_nested_members(groups: dict, max_nesting_depth: int = 10) -> dict:
-        for i in range(max_nesting_depth):
+        for _ in range(max_nesting_depth):
             # recursion the extension of the members to process nested groups
 
-            for name, g in groups.items():
+            for g in groups.values():
                 member_nesting = False
                 parent_nesting = False
 

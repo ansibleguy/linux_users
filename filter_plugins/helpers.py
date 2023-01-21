@@ -20,13 +20,12 @@ class FilterModule(object):
         search_for = cls.ensure_list(search_for)
         search_in = cls.ensure_list(search_in)
         matches = len(set(search_in).intersection(search_for))
-        return True if matches > 0 else False
+        return matches > 0
 
     @staticmethod
     def ensure_list(data: (str, list)) -> list:
         # if user supplied a string instead of a list => convert it to match our expectations
-        if type(data) == list:
+        if isinstance(data, list):
             return data
 
-        else:
-            return [data]
+        return [data]
