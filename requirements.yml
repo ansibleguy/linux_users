@@ -3,5 +3,4 @@
 # install: ansible-galaxy install -r requirements.yml
 
 collections:
-  - name: 'ansible.posix'
-    source: 'https://galaxy.ansible.com'
+  - 'ansible.posix'
