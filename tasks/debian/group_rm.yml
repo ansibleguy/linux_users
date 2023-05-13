@@ -1,6 +1,6 @@
 ---
 
-- name: "Group | Debian | Removing '{{ group_name }}'"
+- name: "Group | Removing '{{ group_name }}'"
   ansible.builtin.group:
     name: "{{ group_name }}"
     state: absent

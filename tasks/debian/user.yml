@@ -1,10 +1,10 @@
 ---
 
-- name: User | Debian | Setting distro-vars
+- name: User | Setting distro-vars
   ansible.builtin.set_fact:
     password_disabled: '!'
 
-- name: User | Debian | Adding users
+- name: User | Adding users
   ansible.builtin.include_tasks: user_add.yml
   vars:
     user: "{{ defaults_user | combine(user_item.value, recursive=true) }}"
@@ -21,7 +21,7 @@
   # user should be created
   # user is in host-scope
 
-- name: User | Debian | Removing users
+- name: User | Removing users
   ansible.builtin.include_tasks: user_rm.yml
   vars:
     user: "{{ defaults_user | combine(user_item.value, recursive=true) }}"

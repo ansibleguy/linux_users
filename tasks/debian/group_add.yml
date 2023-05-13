@@ -1,6 +1,6 @@
 ---
 
-- name: "Group | Debian | Adding '{{ group_name }}'"
+- name: "Group | Adding '{{ group_name }}'"
   ansible.builtin.group:
     name: "{{ group_name }}"
     state: present

@@ -1,13 +1,13 @@
 ---
 
-- name: "User | Debian | Add | {{ name }} | Adding primary group"
+- name: "User | Add | {{ name }} | Adding primary group"
   ansible.builtin.include_tasks: group_add.yml
   vars:
     group_name: "{{ user.group | default(name) }}"
   no_log: true
   when: user.group|default(name) not in SYS_AUTH.groups
 
-- name: "User | Debian | Add | {{ name }}"
+- name: "User | Add | {{ name }}"
   ansible.builtin.user:
     name: "{{ name }}"
     group: "{{ user.group | default(name) }}"
@@ -23,7 +23,7 @@
     user.dont_touch is undefined or
     not user.dont_touch
 
-- name: "User | Debian | Add | {{ name }} | Setting password"
+- name: "User | Add | {{ name }} | Setting password"
   ansible.builtin.user:
     name: "{{ name }}"
     password: "{{ user.password | default(password_disabled) | password_hash('sha512') }}"
@@ -35,7 +35,7 @@
     - user.dont_touch
     - user.password is defined
 
-- name: "User | Debian | Add | {{ name }} | Pulling user info"
+- name: "User | Add | {{ name }} | Pulling user info"
   ansible.builtin.getent:
     database: 'passwd'
     key: "{{ name }}"
@@ -44,7 +44,7 @@
     - user.dont_touch is defined
     - user.dont_touch
 
-- name: "User | Debian | Add | {{ name }} | Force password change"
+- name: "User | Add | {{ name }} | Force password change"
   ansible.builtin.user:
     name: "{{ name }}"
     expires: -1
@@ -53,7 +53,7 @@
     (user_account.changed and user.password_change or
     user_account_pwd.changed and user.password_change)
 
-- name: "User | Debian | Add | {{ name }} | Adding to groups"
+- name: "User | Add | {{ name }} | Adding to groups"
   ansible.builtin.include_tasks: user_membership.yml
   vars:
     group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
@@ -66,7 +66,7 @@
     - name in group.members
     - group.state == 'present'
 
-- name: "User | Debian | Add | {{ name }} | Setting ssh authorized-keys"
+- name: "User | Add | {{ name }} | Setting ssh authorized-keys"
   ansible.posix.authorized_key:
     user: "{{ name }}"
     state: present
@@ -78,7 +78,7 @@
     user.sshpub_path is undefined or
     user.sshpub_path in ['', none, ' ']
 
-- name: "User | Debian | Add | {{ name }} | Setting ssh authorized-keys in custom path"
+- name: "User | Add | {{ name }} | Setting ssh authorized-keys in custom path"
   ansible.posix.authorized_key:
     user: "{{ name }}"
     state: present
@@ -91,7 +91,7 @@
     - user.sshpub_path is defined
     - "user.sshpub_path not in ['', none, ' ']"
 
-- name: "User | Debian | Add | {{ name }} | Adding user privileges"
+- name: "User | Add | {{ name }} | Adding user privileges"
   ansible.builtin.template:
     src: 'templates/etc/sudoers.d/user.j2'
     dest: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
@@ -103,7 +103,7 @@
     - user.privileges is defined
     - user.privileges|length > 0
 
-- name: "User | Debian | Add | {{ name }} | Checking that privileges are not set"
+- name: "User | Add | {{ name }} | Checking that privileges are not set"
   ansible.builtin.file:
     path: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     state: absent
@@ -111,7 +111,7 @@
     user.privileges is undefined or
     user.privileges|length == 0
 
-- name: "User | Debian | Add | {{ name }} | Setting bash aliases"
+- name: "User | Add | {{ name }} | Setting bash aliases"
   ansible.builtin.blockinfile:
     path: "{{ user_account.home | default(getent_passwd[name][4]) }}/.bashrc"
     block: |

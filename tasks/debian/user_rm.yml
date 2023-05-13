@@ -1,13 +1,13 @@
 ---
 
-- name: "User | Debian | Remove | {{ name }}"
+- name: "User | Remove | {{ name }}"
   ansible.builtin.user:
     name: "{{ name }}"
     state: absent
     remove: "{{ user.remove }}"
     force: "{{ user.force_remove }}"
 
-- name: "User | Debian | Remove | {{ name }} | Removing ssh authorized-keys"
+- name: "User | Remove | {{ name }} | Removing ssh authorized-keys"
   ansible.builtin.file:
     state: absent
     path: "{{ user.sshpub_path | replace(SYS_AUTH_HC.sshpub_user_var, name) }}"
@@ -15,12 +15,12 @@
     - user.sshpub_path is defined
     - "user.sshpub_path not in ['', none, ' ']"
 
-- name: "User | Debian | Remove | {{ name }} | Removing privileges"
+- name: "User | Remove | {{ name }} | Removing privileges"
   ansible.builtin.file:
     path: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     state: absent
 
-- name: "User | Debian | Remove | {{ name }} | Removing primary group"
+- name: "User | Remove | {{ name }} | Removing primary group"
   ansible.builtin.include_tasks: group_rm.yml
   vars:
     group_name: "{{ user.group | default(name) }}"

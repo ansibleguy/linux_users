@@ -1,6 +1,6 @@
 ---
 
-- name: Group | Debian | Adding groups
+- name: Group | Adding groups
   ansible.builtin.include_tasks: group_add.yml
   vars:
     group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
@@ -11,7 +11,7 @@
   no_log: true
   when: group.state == 'present'
 
-- name: Group | Debian | Removing groups
+- name: Group | Removing groups
   ansible.builtin.include_tasks: group_rm.yml
   vars:
     group: "{{ defaults_group | combine(group_item.value, recursive=true) }}"
