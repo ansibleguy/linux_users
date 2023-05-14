@@ -102,14 +102,16 @@
   when:
     - user.privileges is defined
     - user.privileges|length > 0
+    - name != 'root'
 
 - name: "User | Add | {{ name }} | Checking that privileges are not set"
   ansible.builtin.file:
     path: "/etc/sudoers.d/{{ user.sudoers_file_prefix }}_{{ name | safe_key }}"
     state: absent
   when: >
-    user.privileges is undefined or
-    user.privileges|length == 0
+    name != 'root' and
+    (user.privileges is undefined or
+    user.privileges|length == 0)
 
 - name: "User | Add | {{ name }} | Setting bash aliases"
   ansible.builtin.blockinfile:
