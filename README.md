@@ -14,6 +14,10 @@ Ansible Role to deploy users and groups on linux servers.
 ## Install
 
 ```bash
+# latest
+ansible-galaxy role install git+https://github.com/ansibleguy/linux_users
+
+# from galaxy
 ansible-galaxy install ansibleguy.linux_users
 
 # or to custom role-path
