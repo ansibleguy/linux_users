@@ -21,7 +21,7 @@
   no_log: true
   when: >
     user.dont_touch is undefined or
-    not user.dont_touch
+    not user.dont_touch | bool
 
 - name: "User | Add | {{ name }} | Setting password"
   ansible.builtin.user:
@@ -32,7 +32,7 @@
   no_log: true
   when:
     - user.dont_touch is defined
-    - user.dont_touch
+    - user.dont_touch | bool
     - user.password is defined
 
 - name: "User | Add | {{ name }} | Pulling user info"
@@ -42,7 +42,7 @@
     split: ":"
   when:
     - user.dont_touch is defined
-    - user.dont_touch
+    - user.dont_touch | bool
 
 - name: "User | Add | {{ name }} | Force password change"
   ansible.builtin.user:
