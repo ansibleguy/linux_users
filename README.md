@@ -2,16 +2,16 @@
 
 Ansible Role to deploy users and groups on linux servers.
 
-[![Lint](https://github.com/ansibleguy/linux_users/actions/workflows/lint.yml/badge.svg)](https://github.com/ansibleguy/linux_users/actions/workflows/lint.yml)
-[![Ansible Galaxy](https://badges.ansibleguy.net/galaxy.badge.svg)](https://galaxy.ansible.com/ui/standalone/roles/ansibleguy/linux_users)
+[![Lint](https://github.com/O-X-L/ansible-role-linux-users/actions/workflows/lint.yml/badge.svg)](https://github.com/O-X-L/ansible-role-linux-users/actions/workflows/lint.yml)
+[![Ansible Galaxy](https://badges.oss.oxl.app/galaxy.badge.svg)](https://galaxy.ansible.com/ui/standalone/roles/oxlorg/linux_users)
 
 **Molecule Integration-Tests**:
 
-* Status: [![Molecule Test Status](https://badges.ansibleguy.net/linux_users.molecule.svg)](https://github.com/ansibleguy/_meta_cicd/blob/latest/templates/usr/local/bin/cicd/molecule.sh.j2) |
-[![Functional-Tests](https://github.com/ansibleguy/linux_users/actions/workflows/integration_test_result.yml/badge.svg)](https://github.com/ansibleguy/linux_users/actions/workflows/integration_test_result.yml)
-* Logs: [API](https://ci.ansibleguy.net/api/job/ansible-test-molecule-linux_users/logs?token=2b7bba30-9a37-4b57-be8a-99e23016ce70&lines=1000) | [Short](https://badges.ansibleguy.net/log/molecule_linux_users_test_short.log) | [Full](https://badges.ansibleguy.net/log/molecule_linux_users_test.log)
+* Status: [![Molecule Test Status](https://badges.oss.oxl.app/linux_users.molecule.svg)](https://github.com/O-X-L/ansible-role-oxl-cicd/blob/latest/templates/usr/local/bin/cicd/molecule.sh.j2) |
+[![Functional-Tests](https://github.com/O-X-L/ansible-role-linux-users/actions/workflows/integration_test_result.yml/badge.svg)](https://github.com/O-X-L/ansible-role-linux-users/actions/workflows/integration_test_result.yml)
+* Logs: [API](https://ci.oss.oxl.app/api/job/ansible-test-molecule-linux_users/logs?token=2b7bba30-9a37-4b57-be8a-99e23016ce70&lines=1000) | [Short](https://badges.oss.oxl.app/log/molecule_linux_users_test_short.log) | [Full](https://badges.oss.oxl.app/log/molecule_linux_users_test.log)
 
-Internal CI: [Tester Role](https://github.com/ansibleguy/_meta_cicd) | [Jobs API](https://github.com/O-X-L/github-self-hosted-jobs-systemd)
+Internal CI: [Tester Role](https://github.com/O-X-L/ansible-role-oxl-cicd) | [Jobs API](https://github.com/O-X-L/github-self-hosted-jobs-systemd)
 
 **Tested:**
 * Debian 11
@@ -23,13 +23,13 @@ Internal CI: [Tester Role](https://github.com/ansibleguy/_meta_cicd) | [Jobs API
 
 ```bash
 # latest
-ansible-galaxy role install git+https://github.com/ansibleguy/linux_users
+ansible-galaxy role install git+https://github.com/O-X-L/ansible-role-linux-users
 
 # from galaxy
-ansible-galaxy install ansibleguy.linux_users
+ansible-galaxy install oxlorg.linux_users
 
 # or to custom role-path
-ansible-galaxy install ansibleguy.linux_users --roles-path ./roles
+ansible-galaxy install oxlorg.linux_users --roles-path ./roles
 
 # install dependencies
 ansible-galaxy install -r requirements.yml
@@ -52,7 +52,7 @@ python3 -m pip install -r requirements.txt
 
 * You want a simple **Ansible GUI**?
 
-  Check-out this [Ansible WebUI](https://github.com/ansibleguy/webui)
+  Check-out this [Ansible WebUI](https://github.com/O-X-L/ansible-webui)
 
 ----
 
@@ -74,7 +74,7 @@ system_auth:
         3437356663383466630a666161363163346533333139656566386466383733646134616166376638
         35313765356134396130333439663461353336313230366338646165376666313232
       ssh_pub:
-        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno= guy@ansibleguy.net'
+        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno= contact@oxl.at'
       privileges:
         - '/usr/bin/rsync'
         - '/bin/systemctl restart apache2.service'
@@ -93,7 +93,7 @@ system_auth:
         3063306334636331320a653837663432643164626665353638643032336534653239666534373562
         62323631363638633239383839666337356538366133326136363033373338643138
       ssh_pub:
-        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxS1MoeqDyN6+ZKsnLJHIA0/5nVQ6+a1Bgwknx3U7lGlqFIki/HgUX089YUzhbEKcxzTlR3Ji+gLnxhBZhe700= other@ansibleguy.net'
+        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxS1MoeqDyN6+ZKsnLJHIA0/5nVQ6+a1Bgwknx3U7lGlqFIki/HgUX089YUzhbEKcxzTlR3Ji+gLnxhBZhe700= other@oxl.at'
       scope: 'dc_europe_west'  # only create user on servers that are a member of the inventory-group 'dc_europe_west'
       privileges:
         - '/bin/systemctl restart some_service.service'
@@ -169,7 +169,7 @@ If the current group should inherit all members of another one:
 
 * **Note:** Most of the role's functionality can be opted in or out.
 
-  For all available options - see the default-config located in [the main defaults-file](https://github.com/ansibleguy/linux_users/blob/latest/defaults/main.yml)!
+  For all available options - see the default-config located in [the main defaults-file](https://github.com/O-X-L/ansible-role-linux-users/blob/latest/defaults/main.yml)!
 
 
 * **Warning:** Not every setting/variable you provide will be checked for validity. Bad config might break the role!
@@ -193,7 +193,7 @@ system_auth:
         3437356663383466630a666161363163346533333139656566386466383733646134616166376638
         35313765356134396130333439663461353336313230366338646165376666313232
       ssh_pub:
-        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno= guy@ansibleguy.net'
+        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno= contact@oxl.at'
       privileges:
         - '/usr/bin/rsync'
         - '/bin/systemctl restart apache2.service'
@@ -214,7 +214,7 @@ system_auth:
             3063306334636331320a653837663432643164626665353638643032336534653239666534373562
             62323631363638633239383839666337356538366133326136363033373338643138
       ssh_pub:
-        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBcfYHDR8O4A9uIHnw3v25rDPtqDlRmFIyJc1fxZx90K6BUNXV+TTkFH836EftHVAaMdlMZSfNm9O+o0UbrvbaI= another@ansibleguy.net'
+        - 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBcfYHDR8O4A9uIHnw3v25rDPtqDlRmFIyJc1fxZx90K6BUNXV+TTkFH836EftHVAaMdlMZSfNm9O+o0UbrvbaI= another@oxl.at'
       force_password_change: true
   
   groups:

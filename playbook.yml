@@ -14,7 +14,7 @@
           ssh_pub:
             - 'ecdsa-sha2-nistp256
             AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKkIlii1iJM240yPSPS5WhrdQwGFa7BTJZ59ia40wgVWjjg1JlTtr9K2W66fNb2zNO7tLkaNzPddMEsov2bJAno=
-            guy@ansibleguy.net'
+            contact@oxl.at'
           privileges:
             - '/usr/bin/rsync'
             - '/bin/systemctl restart apache2.service'
@@ -25,7 +25,7 @@
           ssh_pub:
             - 'ecdsa-sha2-nistp256
             AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBxS1MoeqDyN6+ZKsnLJHIA0/5nVQ6+a1Bgwknx3U7lGlqFIki/HgUX089YUzhbEKcxzTlR3Ji+gLnxhBZhe700=
-            other@ansibleguy.net'
+            other@oxl.at'
           scope: 'dc_europe_west'
           privileges:
             - '/bin/systemctl restart some_service.service'
@@ -54,4 +54,4 @@
   #  - vars/group.yml
 
   roles:
-    - ansibleguy.linux_users
+    - oxlorg.linux_users
